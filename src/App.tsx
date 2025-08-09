@@ -288,9 +288,21 @@ function HomePage() {
 function CategoryPageWrapper({ category }: { category: string }) {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [likedItems, setLikedItems] = useState<Product[]>([]);
 
   const handleAddToCart = (product: Product) => {
     setCartItems(prev => [...prev, product]);
+  };
+
+  const handleToggleLike = (product: Product) => {
+    setLikedItems(prev => {
+      const isLiked = prev.some(item => item.id === product.id);
+      if (isLiked) {
+        return prev.filter(item => item.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
   };
 
   const handleBack = () => {
@@ -303,6 +315,8 @@ function CategoryPageWrapper({ category }: { category: string }) {
       products={products}
       onBack={handleBack}
       onAddToCart={handleAddToCart}
+      onToggleLike={handleToggleLike}
+      likedItems={likedItems}
     />
   );
 }

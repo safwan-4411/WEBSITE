@@ -91,6 +91,8 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
               key={product.id} 
               product={product} 
               onAddToCart={onAddToCart}
+              onToggleLike={onToggleLike}
+              isLiked={likedItems.some(item => item.id === product.id)}
             />
           ))}
         </div>
