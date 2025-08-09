@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
-import { ShoppingCart, ChevronDown, Phone, Search, Filter } from 'lucide-react';
+import { ShoppingCart, ChevronDown, Phone, Search, Filter, Heart } from 'lucide-react';
 import { ProductCard } from './components/ProductCard';
 import { CategoryFilter } from './components/CategoryFilter';
 import { CategoryPage } from './components/CategoryPage';
+import { SearchPage } from './components/SearchPage';
+import { Cart } from './components/Cart';
 import { products, categories, Product } from './data/products';
 
 function HomePage() {
@@ -107,42 +109,11 @@ function HomePage() {
                   {/* Search */}
                   <div className="relative">
                     <button 
-                      onClick={() => setShowSearch(!showSearch)}
+                      onClick={() => navigate('/search')}
                       className="text-white hover:text-purple-300 transition-colors"
                     >
                       <Search className="w-6 h-6" />
                     </button>
-                    {showSearch && (
-                      <div className="absolute top-full right-0 mt-2 w-80 bg-black/90 backdrop-blur-lg rounded-lg p-4">
-                        <div className="relative">
-                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                          <input
-                            type="text"
-                            placeholder="Search products..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-white/10 border border-white/20 rounded-full py-2 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 transition-colors"
-                            autoFocus
-                          />
-                        </div>
-                        {searchTerm && (
-                          <div className="mt-3 max-h-60 overflow-y-auto">
-                            {filteredProducts.slice(0, 5).map((product) => (
-                              <div key={product.id} className="flex items-center space-x-3 p-2 hover:bg-purple-600/20 rounded-lg cursor-pointer">
-                                <img src={product.image} alt={product.name} className="w-10 h-10 object-cover rounded" />
-                                <div>
-                                  <p className="text-white text-sm">{product.name}</p>
-                                  <p className="text-gray-400 text-xs">${product.price}</p>
-                                </div>
-                              </div>
-                            ))}
-                            {filteredProducts.length === 0 && (
-                              <p className="text-gray-400 text-sm p-2">No products found</p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
 
