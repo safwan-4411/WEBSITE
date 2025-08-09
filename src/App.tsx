@@ -9,10 +9,12 @@ import { products, categories, Product } from './data/products';
 function HomePage() {
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [likedItems, setLikedItems] = useState<Product[]>([]);
+  const [showCart, setShowCart] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  const [cartItems, setCartItems] = useState<Product[]>([]);
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
@@ -28,6 +30,34 @@ function HomePage() {
   const handleAddToCart = (product: Product) => {
     setCartItems(prev => [...prev, product]);
     setCartCount(prev => prev + 1);
+  };
+
+  const handleToggleLike = (product: Product) => {
+    setLikedItems(prev => {
+      const isLiked = prev.some(item => item.id === product.id);
+      if (isLiked) {
+        return prev.filter(item => item.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    setCartItems(prev => {
+      const index = prev.findIndex(item => item.id === productId);
+      if (index > -1) {
+        const newItems = [...prev];
+        newItems.splice(index, 1);
+        setCartCount(prev => prev - 1);
+        return newItems;
+      }
+      return prev;
+    });
+  };
+
+  const handleRemoveFromLikes = (productId: number) => {
+    setLikedItems(prev => prev.filter(item => item.id !== productId));
   };
 
   const handleCategoryClick = (category: string) => {
@@ -118,11 +148,19 @@ function HomePage() {
 
                 {/* Cart & Contact */}
                 <div className="flex items-center space-x-4">
-                  <button className="relative">
+                  <button 
+                    onClick={() => setShowCart(true)}
+                    className="relative"
+                  >
                     <ShoppingCart className="w-6 h-6 text-white hover:text-purple-300 transition-colors" />
                     {cartCount > 0 && (
                       <span className="absolute -top-2 -right-2 bg-[#cc73f8] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                         {cartCount}
+                      </span>
+                    )}
+                    {likedItems.length > 0 && (
+                      <span className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                        <Heart className="w-2 h-2 fill-current" />
                       </span>
                     )}
                   </button>

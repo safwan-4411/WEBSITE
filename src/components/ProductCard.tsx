@@ -16,9 +16,11 @@ interface Product {
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
+  onToggleLike: (product: Product) => void;
+  isLiked: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onToggleLike, isLiked }) => {
   return (
     <div className="group relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/30 transition-all duration-300 hover:transform hover:scale-105">
       {/* Product Image */}
@@ -40,8 +42,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
         </div>
 
         {/* Wishlist Button */}
-        <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:bg-purple-600/50 transition-colors opacity-0 group-hover:opacity-100">
-          <Heart className="w-4 h-4" />
+        <button 
+          onClick={() => onToggleLike(product)}
+          className={`absolute top-4 right-4 p-2 backdrop-blur-sm rounded-full transition-all duration-300 ${
+            isLiked 
+              ? 'bg-red-500/80 text-white opacity-100' 
+              : 'bg-black/50 text-white hover:bg-purple-600/50 opacity-0 group-hover:opacity-100'
+          }`}
+        >
+          <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
         </button>
 
         {/* Quick Add to Cart */}
