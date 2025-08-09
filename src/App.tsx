@@ -65,7 +65,7 @@ function HomePage() {
                         <span>{item}</span>
                         <ChevronDown className="w-4 h-4" />
                       </button>
-                      <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 backdrop-blur-lg rounded-lg py-2 hidden group-hover:block">
+                      <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 backdrop-blur-lg rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
                         <button onClick={() => handleCategoryClick('Trimmers')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Trimmers</button>
                         <button onClick={() => handleCategoryClick('Dryers')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Dryers</button>
                         <button onClick={() => handleCategoryClick('Toys')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Toys</button>
