@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { ShoppingCart, ChevronDown, Phone, Search, Filter } from 'lucide-react';
 import { ProductCard } from './components/ProductCard';
 import { CategoryFilter } from './components/CategoryFilter';
+import { CategoryPage } from './components/CategoryPage';
 import { products, categories, Product } from './data/products';
 
-function App() {
+function HomePage() {
+  const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -26,6 +29,11 @@ function App() {
     setCartItems(prev => [...prev, product]);
     setCartCount(prev => prev + 1);
   };
+
+  const handleCategoryClick = (category: string) => {
+    navigate(`/category/${category.toLowerCase()}`);
+  };
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       {/* Purple gradient blur effect */}
@@ -58,10 +66,10 @@ function App() {
                         <ChevronDown className="w-4 h-4" />
                       </button>
                       <div className="absolute top-full left-0 mt-2 w-48 bg-black/90 backdrop-blur-lg rounded-lg py-2 hidden group-hover:block">
-                        <a href="#" className="block px-4 py-2 text-sm text-white hover:bg-purple-600/20">Trimmers</a>
-                        <a href="#" className="block px-4 py-2 text-sm text-white hover:bg-purple-600/20">Dryers</a>
-                        <a href="#" className="block px-4 py-2 text-sm text-white hover:bg-purple-600/20">Toys</a>
-                        <a href="#" className="block px-4 py-2 text-sm text-white hover:bg-purple-600/20">Lamps</a>
+                        <button onClick={() => handleCategoryClick('Trimmers')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Trimmers</button>
+                        <button onClick={() => handleCategoryClick('Dryers')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Dryers</button>
+                        <button onClick={() => handleCategoryClick('Toys')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Toys</button>
+                        <button onClick={() => handleCategoryClick('Lamps')} className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-purple-600/20">Lamps</button>
                       </div>
                     </div>
                   ))}
@@ -237,6 +245,44 @@ function App() {
       </footer>
     </div>
   );
+}
+
+function CategoryPageWrapper({ category }: { category: string }) {
+  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+
+  const handleAddToCart = (product: Product) => {
+    setCartItems(prev => [...prev, product]);
+  };
+
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  return (
+    <CategoryPage
+      category={category.charAt(0).toUpperCase() + category.slice(1)}
+      products={products}
+      onBack={handleBack}
+      onAddToCart={handleAddToCart}
+    />
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/category/:category" element={<CategoryRouteHandler />} />
+      </Routes>
+    </Router>
+  );
+}
+
+function CategoryRouteHandler() {
+  const { category } = useParams<{ category: string }>();
+  return <CategoryPageWrapper category={category || 'trimmers'} />;
 }
 
 export default App;
