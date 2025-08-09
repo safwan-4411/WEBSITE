@@ -292,12 +292,48 @@ function CategoryPageWrapper({ category }: { category: string }) {
   );
 }
 
+function SearchPageWrapper() {
+  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [likedItems, setLikedItems] = useState<Product[]>([]);
+
+  const handleAddToCart = (product: Product) => {
+    setCartItems(prev => [...prev, product]);
+  };
+
+  const handleToggleLike = (product: Product) => {
+    setLikedItems(prev => {
+      const isLiked = prev.some(item => item.id === product.id);
+      if (isLiked) {
+        return prev.filter(item => item.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
+  };
+
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  return (
+    <SearchPage
+      products={products}
+      onBack={handleBack}
+      onAddToCart={handleAddToCart}
+      onToggleLike={handleToggleLike}
+      likedItems={likedItems}
+    />
+  );
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/category/:category" element={<CategoryRouteHandler />} />
+        <Route path="/search" element={<SearchPageWrapper />} />
       </Routes>
     </Router>
   );
